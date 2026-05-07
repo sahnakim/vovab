@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>주간 영어단어장 - 듣고 쓰기 시험</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    :root{
+      --bg1:#eef2ff;
+      --bg2:#fff7ed;
+      --card:#ffffffcc;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --primary:#6366f1;
+      --primary-dark:#4f46e5;
+      --secondary:#ecfeff;
+      --success:#16a34a;
+      --danger:#ef4444;
+      --warning:#f59e0b;
+      --border:#e5e7eb;
+      --shadow:0 12px 28px rgba(79,70,229,0.12);
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, #dbeafe 0, transparent 26%),
+        radial-gradient(circle at top right, #fef3c7 0, transparent 22%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+      min-height:100vh;
+    }
+    .app{max-width:1020px;margin:0 auto;padding:16px}
+    .topbar{
+      display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px
+    }
+    h1{margin:0;font-size:28px;line-height:1.15}
+    .subtitle{color:var(--muted);font-size:14px;margin-top:6px;line-height:1.5}
+    .pill{
+      background:#fff;border:1px solid var(--border);border-radius:999px;padding:10px 14px;
+      font-weight:800;box-shadow:var(--shadow);white-space:nowrap
+    }
+    .hero{
+      background:linear-gradient(135deg,#ffffffcc,#eef2ffcc);
+      border:1px solid #e0e7ff;border-radius:24px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px
+    }
+    .hero-grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .hero-card{
+      background:#fff;border:1px solid var(--border);border-radius:20px;padding:14px
+    }
+    .hero-title{font-weight:900;font-size:16px;margin-bottom:6px}
+    .hero-big{font-weight:900;font-size:22px}
+    .nav{
+      display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px
+    }
+    button{
+      border:0;background:var(--primary);color:#fff;padding:13px 14px;border-radius:15px;
+      font-size:15px;font-weight:800;cursor:pointer;touch-action:manipulation
+    }
+    button:active{transform:scale(.98)}
+    button.secondary{background:#eef2ff;color:var(--primary)}
+    button.success{background:var(--success)}
+    button.danger{background:var(--danger)}
+    button.warning{background:var(--warning)}
+    button.ghost{background:#fff;color:var(--text);border:1px solid var(--border)}
+    .page{
+      background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,.6);border-radius:24px;padding:18px;box-shadow:var(--shadow);
+      margin-bottom:14px
+    }
+    .hidden{display:none !important}
+    .section-title{font-size:22px;font-weight:900;margin:0 0 6px}
+    .hint{font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.5}
+    .notice{
+      background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:16px;
+      padding:12px;font-size:13px;line-height:1.5;margin-bottom:14px
+    }
+    .progress{
+      width:100%;height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:10px 0 16px
+    }
+    .progress > div{height:100%;width:0;background:linear-gradient(90deg,#818cf8,#60a5fa);transition:width .2s ease}
+    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+    .actions button{flex:1 1 auto}
+    .stats-grid,.reward-grid,.home-grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .mini-card{
+      background:#fff;border:1px solid var(--border);border-radius:18px;padding:14px
+    }
+    .mini-title{font-size:13px;color:var(--muted);margin-bottom:8px}
+    .mini-value{font-size:22px;font-weight:900}
+    .stars{display:flex;gap:6px;flex-wrap:wrap}
+    .star{font-size:24px;filter:grayscale(1);opacity:.3}
+    .star.on{filter:none;opacity:1}
+    .day-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .day{
+      background:#fff;border:1px solid var(--border);border-radius:14px;padding:10px 6px;text-align:center;font-weight:900
+    }
+    .day.done{background:#dcfce7;border-color:#86efac;color:#166534}
+    .word-row{
+      display:grid;grid-template-columns:1fr;gap:8px;padding-bottom:14px;margin-bottom:14px;
+      border-bottom:1px solid var(--border)
+    }
+    input,select{
+      width:100%;border:1px solid var(--border);border-radius:12px;padding:13px;font-size:16px;background:#fff
+    }
+    input:focus,select:focus{outline:2px solid #c7d2fe;border-color:var(--primary)}
+    .row-note{font-size:12px;color:var(--muted)}
+    .study-wrap{text-align:center}
+    .image-box{
+      width:100%;max-width:460px;margin:0 auto 16px;min-height:240px;border:1px solid var(--border);
+      border-radius:20px;overflow:hidden;background:#f8fafc;display:flex;align-items:center;justify-content:center;position:relative
+    }
+    .image-box img{display:block;width:100%;height:300px;object-fit:cover}
+    .image-placeholder{
+      width:100%;min-height:240px;display:flex;flex-direction:column;justify-content:center;align-items:center;
+      background:linear-gradient(180deg,#f8fafc,#eef2ff);padding:24px
+    }
+    .image-emoji{font-size:64px;margin-bottom:10px}
+    .image-label{font-size:22px;font-weight:900}
+    .image-sub{margin-top:8px;font-size:13px;color:var(--muted)}
+    .big-word{font-size:38px;font-weight:900;margin:8px 0 10px;word-break:break-word}
+    .big-meaning{font-size:26px;font-weight:900;color:var(--primary);min-height:36px}
+    .speak-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px 0 12px}
+    .small{font-size:13px;color:var(--muted)}
+    .quiz-config{
+      display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:18px
+    }
+    .quiz-card{
+      background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px
+    }
+    .quiz-question{font-size:24px;font-weight:900;line-height:1.4;margin:8px 0 14px}
+    .quiz-option{
+      display:block;width:100%;text-align:left;background:#fff;color:var(--text);
+      border:1px solid var(--border);margin:8px 0;border-radius:14px
+    }
+    .feedback{
+      margin-top:12px;border-radius:14px;padding:12px;font-weight:800
+    }
+    .feedback.good{background:#dcfce7;color:#166534;border:1px solid #86efac}
+    .feedback.bad{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+    .reward-grid{grid-template-columns:repeat(2,1fr)}
+    .reward-item{
+      background:#fff;border:1px solid var(--border);border-radius:18px;padding:14px;text-align:center;position:relative
+    }
+    .reward-item.locked{opacity:.45;filter:grayscale(1)}
+    .reward-emoji{font-size:42px;margin-bottom:8px}
+    .reward-name{font-size:14px;font-weight:900}
+    .reward-rule{font-size:12px;color:var(--muted);line-height:1.4;margin-top:5px}
+    .mascot-box{
+      background:linear-gradient(135deg,#ede9fe,#e0f2fe);border:1px solid #c7d2fe;border-radius:22px;padding:18px;text-align:center
+    }
+    .mascot-face{font-size:72px;margin-bottom:6px}
+    .mascot-name{font-size:24px;font-weight:900}
+    .mascot-desc{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.5}
+
+    .listen-box{background:linear-gradient(135deg,#eef2ff,#ecfeff);border:1px solid #c7d2fe;border-radius:20px;padding:22px;text-align:center;margin-bottom:14px}
+    .listen-icon{font-size:64px;margin-bottom:8px}
+    .answer-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
+    .answer-label{font-size:13px;font-weight:900;color:#4b5563;margin-bottom:6px}
+    .feedback.partial{background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
+    .check-line{display:flex;justify-content:space-between;gap:10px;border-top:1px solid rgba(0,0,0,.08);padding-top:8px;margin-top:8px}
+    .result-good{color:#166534;font-weight:900}
+    .result-bad{color:#991b1b;font-weight:900}
+    .list{display:grid;gap:8px}
+    .list-item{
+      background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;display:flex;justify-content:space-between;gap:10px;align-items:center
+    }
+    footer{text-align:center;font-size:12px;color:var(--muted);padding:10px 0 24px;line-height:1.5}
+    @media (min-width: 760px){
+      .nav{grid-template-columns:repeat(6,1fr)}
+      .hero-grid,.home-grid,.stats-grid{grid-template-columns:repeat(3,1fr)}
+      .reward-grid{grid-template-columns:repeat(4,1fr)}
+      .quiz-config{grid-template-columns:1fr 1fr}
+      .answer-grid{grid-template-columns:1fr 1fr}
+      .word-row{grid-template-columns:1fr 1fr 1.2fr auto}
+      .word-row .row-note{grid-column:1 / -2}
+      .day-grid{grid-template-columns:repeat(7,1fr)}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div>
+      <h1>🎧 주간 영어단어장</h1>
+      <div class="subtitle">발음을 듣고 스펠링과 뜻을 직접 쓰는 시험 버전</div>
+    </div>
+    <div class="pill">⭐ <span id="starCount">0</span>개</div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-grid">
+      <div class="hero-card">
+        <div class="hero-title">이번 주 목표</div>
+        <div class="hero-big">듣고 쓰기</div>
+        <div class="small">발음을 듣고 영어 스펠링과 한글 뜻을 모두 입력해요.</div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-title">핵심 기능</div>
+        <div class="small">이미지 학습 · 발음 듣기 · 듣고 쓰기 시험 · 별 보상 · 스티커 컬렉션</div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-title">권장 사용</div>
+        <div class="small">스펠링과 뜻을 각각 채점하고, 둘 다 맞아야 정답 처리돼요.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notice">
+    아이폰에서 발음이 안 나오면 먼저 <strong>발음 테스트</strong> 버튼을 한 번 눌러주세요. Safari에서는 사용자 터치 후 음성이 재생되는 경우가 많아요.
+  </div>
+
+  <div class="nav">
+    <button type="button" id="btnHome">홈</button>
+    <button type="button" id="btnWords">단어 입력</button>
+    <button type="button" id="btnStudy">외우기</button>
+    <button type="button" id="btnQuiz">듣고 쓰기 시험</button>
+    <button type="button" id="btnRewards">보상</button>
+    <button type="button" id="btnSpeakTest" class="secondary">발음 테스트</button>
+  </div>
+
+  <section id="pageHome" class="page">
+    <h2 class="section-title">이번 주 학습 현황</h2>
+    <p class="hint">매일 공부하면 별이 쌓이고, 별이 쌓이면 스티커와 캐릭터가 열려요.</p>
+    <div class="progress"><div id="homeProgress"></div></div>
+    <div id="homeSummary" class="small" style="font-size:15px;font-weight:800;color:#374151">단어 0개가 등록되어 있어요.</div>
+
+    <div class="home-grid" style="margin-top:14px;">
+      <div class="mini-card">
+        <div class="mini-title">전체 단어 수</div>
+        <div class="mini-value" id="statWordCount">0</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-title">어려운 단어</div>
+        <div class="mini-value" id="statHardCount">0</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-title">지금 캐릭터</div>
+        <div class="mini-value" id="statMascot">🥚</div>
+      </div>
+    </div>
+
+    <div class="mini-card" style="margin-top:12px;">
+      <div class="mini-title">별 모으기</div>
+      <div class="stars" id="starsBox"></div>
+    </div>
+
+    <div class="mini-card" style="margin-top:12px;">
+      <div class="mini-title">이번 주 공부 체크</div>
+      <div class="day-grid" id="dayGrid"></div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="success" id="btnMarkToday">오늘 공부 완료 ✅</button>
+      <button type="button" class="secondary" id="btnStartStudyQuick">바로 외우기</button>
+      <button type="button" class="secondary" id="btnStartQuizQuick">시험 보기</button>
+    </div>
+  </section>
+
+  <section id="pageWords" class="page hidden">
+    <h2 class="section-title">이번 주 단어 입력</h2>
+    <p class="hint">영어 단어, 뜻, 그리고 원하면 이미지 링크도 넣어주세요. 뜻이 2개 이상이면 / 또는 , 로 구분하면 됩니다.</p>
+    <div id="wordInputs"></div>
+    <div class="actions">
+      <button type="button" class="secondary" id="btnAddWord">단어 추가</button>
+      <button type="button" class="success" id="btnSaveWords">저장하기</button>
+      <button type="button" class="ghost" id="btnSampleWords">예시 넣기</button>
+      <button type="button" class="danger" id="btnClearWords">단어 삭제</button>
+    </div>
+  </section>
+
+  <section id="pageStudy" class="page hidden">
+    <h2 class="section-title" id="studyTitle">단어 외우기</h2>
+    <p class="hint">이미지와 발음을 함께 보면서 외워보세요.</p>
+    <div class="progress"><div id="studyProgress"></div></div>
+    <div class="study-wrap">
+      <div class="small" id="studyCounter">0 / 0</div>
+      <div class="image-box" id="studyImageBox"></div>
+      <div class="big-word" id="studyWord">단어 없음</div>
+      <div class="speak-row">
+        <button type="button" class="warning" id="btnPronounce">🔊 발음 듣기</button>
+        <button type="button" class="secondary" id="btnPronounceSlow">🐢 천천히 듣기</button>
+      </div>
+      <div class="big-meaning" id="studyMeaning"></div>
+      <div class="actions">
+        <button type="button" class="secondary" id="btnShowMeaning">뜻 보기</button>
+        <button type="button" class="success" id="btnKnown">외웠어요</button>
+        <button type="button" class="danger" id="btnHard">아직 어려워요</button>
+        <button type="button" class="ghost" id="btnStudyHardOnly">어려운 단어만 보기</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="pageQuiz" class="page hidden">
+    <h2 class="section-title">듣고 쓰기 시험</h2>
+    <p class="hint">단어는 화면에 보이지 않아요. 발음을 듣고 스펠링과 뜻을 적어보세요.</p>
+
+    <div id="quizSetup">
+      <div class="quiz-config">
+        <div class="mini-card">
+          <div class="mini-title">문제 수</div>
+          <select id="quizCount">
+            <option value="5">5문제</option>
+            <option value="10" selected>10문제</option>
+            <option value="999">등록된 단어 전체</option>
+          </select>
+        </div>
+        <div class="mini-card">
+          <div class="mini-title">자동 발음</div>
+          <select id="autoSpeak">
+            <option value="yes" selected>문제마다 자동으로 들려주기</option>
+            <option value="no">내가 버튼 눌러 듣기</option>
+          </select>
+        </div>
+        <div class="mini-card">
+          <div class="mini-title">시험 시작</div>
+          <button type="button" id="btnStartQuiz">시험 시작하기</button>
+        </div>
+      </div>
+      <div class="notice" style="margin-bottom:0;">
+        뜻 채점은 띄어쓰기와 일부 문장부호를 무시해요. 뜻이 여러 개면 “빠른/신속한”, “빠른, 신속한”, “빠른 또는 신속한”처럼 입력하면 둘 중 하나만 맞아도 정답입니다.
+      </div>
+    </div>
+
+    <div id="quizPlay" class="hidden">
+      <div class="progress"><div id="quizProgress"></div></div>
+      <div class="quiz-card">
+        <div class="small" id="quizCounter">문제 1 / 10</div>
+        <div class="listen-box">
+          <div class="listen-icon">🎧</div>
+          <div class="quiz-question">발음을 듣고 답을 적어보세요</div>
+          <div class="speak-row">
+            <button type="button" class="warning" id="btnListenQuestion">🔊 다시 듣기</button>
+            <button type="button" class="secondary" id="btnListenQuestionSlow">🐢 천천히 듣기</button>
+          </div>
+        </div>
+        <div class="answer-grid">
+          <div><div class="answer-label">영어 스펠링</div><input id="quizSpelling" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="예: remember"></div>
+          <div><div class="answer-label">한글 뜻</div><input id="quizMeaning" autocomplete="off" placeholder="예: 기억하다"></div>
+        </div>
+        <div class="actions"><button type="button" id="btnSubmitListening">정답 제출</button></div>
+        <div id="quizFeedback"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pageRewards" class="page hidden">
+    <h2 class="section-title">보상 & 캐릭터</h2>
+    <p class="hint">별과 학습 기록에 따라 스티커와 캐릭터가 열려요.</p>
+
+    <div class="mascot-box">
+      <div class="mascot-face" id="mascotFace">🥚</div>
+      <div class="mascot-name" id="mascotName">알콩이</div>
+      <div class="mascot-desc" id="mascotDesc">별을 모으면 더 멋진 캐릭터로 성장해요.</div>
+    </div>
+
+    <div class="stats-grid" style="margin-top:14px;">
+      <div class="mini-card">
+        <div class="mini-title">완료한 시험</div>
+        <div class="mini-value" id="rewardQuizCount">0</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-title">100점 시험</div>
+        <div class="mini-value" id="rewardPerfectCount">0</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-title">열린 스티커</div>
+        <div class="mini-value" id="rewardUnlockedCount">0</div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;" class="reward-grid" id="rewardGrid"></div>
+  </section>
+
+  <section id="pageResult" class="page hidden">
+    <h2 class="section-title">시험 결과</h2>
+    <div id="resultBox"></div>
+    <div class="actions">
+      <button type="button" class="secondary" id="btnQuizAgain">다시 시험 보기</button>
+      <button type="button" class="secondary" id="btnReviewWrong">틀린/어려운 단어 복습</button>
+      <button type="button" id="btnGoRewards">보상 보러 가기</button>
+    </div>
+  </section>
+
+  <footer>
+    입력한 단어와 결과는 현재 브라우저에 저장됩니다. 발음 기능은 브라우저의 음성 기능을 사용하며,
+    자동 이미지는 인터넷 연결 시 더 잘 동작합니다.
+  </footer>
+</div>
+
+<script>
+(function(){
+  var STORAGE_KEY = "weekly_vocab_complete_v1";
+  var state = {
+    words: [],
+    hardWords: [],
+    stars: 0,
+    studiedDays: {},
+    lastResult: null,
+    stats: {
+      totalQuizCount: 0,
+      perfectCount: 0,
+      totalCorrect: 0,
+      totalQuestions: 0
+    },
+    unlockedRewards: []
+  };
+
+  var studyList = [];
+  var studyIndex = 0;
+  var quizDeck = [];
+  var quizIndex = 0;
+  var quizScore = 0;
+  var wrongAnswers = [];
+  var imageCache = {};
+
+  var REWARDS = [
+    {id:"r1", emoji:"🌱", name:"시작 스티커", rule:"앱 시작", type:"always"},
+    {id:"r2", emoji:"⭐", name:"별 5개", rule:"별 5개 모으기", type:"stars", value:5},
+    {id:"r3", emoji:"🎈", name:"별 10개", rule:"별 10개 모으기", type:"stars", value:10},
+    {id:"r4", emoji:"🧁", name:"첫 시험", rule:"시험 1회 완료", type:"quiz", value:1},
+    {id:"r5", emoji:"🏅", name:"시험 3회", rule:"시험 3회 완료", type:"quiz", value:3},
+    {id:"r6", emoji:"👑", name:"완벽한 점수", rule:"100점 1회 달성", type:"perfect", value:1},
+    {id:"r7", emoji:"🦄", name:"완벽 3번", rule:"100점 3회 달성", type:"perfect", value:3},
+    {id:"r8", emoji:"📚", name:"꾸준함", rule:"공부 체크 3일", type:"days", value:3},
+    {id:"r9", emoji:"🚀", name:"초집중", rule:"공부 체크 7일", type:"days", value:7},
+    {id:"r10", emoji:"💎", name:"별 20개", rule:"별 20개 모으기", type:"stars", value:20},
+    {id:"r11", emoji:"🌈", name:"별 30개", rule:"별 30개 모으기", type:"stars", value:30},
+    {id:"r12", emoji:"🏰", name:"영어 마스터", rule:"별 50개 모으기", type:"stars", value:50}
+  ];
+
+  function el(id){ return document.getElementById(id); }
+  function qs(sel, root){ return (root || document).querySelector(sel); }
+  function qsa(sel, root){ return (root || document).querySelectorAll(sel); }
+  function on(id, ev, fn){ var node = el(id); if(node) node.addEventListener(ev, fn, false); }
+
+  function escapeHtml(value){
+    return String(value)
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
+  }
+
+  function normalizeEnglish(v){
+    return String(v || "").toLowerCase().replace(/\s+/g,"").replace(/[^a-z]/g,"");
+  }
+
+  function normalizeKorean(v){
+    return String(v || "").toLowerCase().replace(/\s+/g,"").replace(/[.,!?'"]|[~:;()\[\]{}]/g,"");
+  }
+
+  function splitMeaningAnswers(v){
+    var raw = String(v || "").trim();
+    if(!raw) return [];
+    raw = raw
+      .replace(/\s+또는\s+/g, "/")
+      .replace(/\s+혹은\s+/g, "/")
+      .replace(/\s+or\s+/gi, "/");
+    var parts = raw.split(/[\/,，;；|]/);
+    var answers = [];
+    for(var i=0;i<parts.length;i++){
+      var item = parts[i].trim();
+      if(item) answers.push(item);
+    }
+    if(!answers.length && raw) answers.push(raw);
+    return answers;
+  }
+
+  function isMeaningCorrect(userInput, savedMeaning){
+    var user = normalizeKorean(userInput);
+    if(!user) return false;
+    var answers = splitMeaningAnswers(savedMeaning);
+    for(var i=0;i<answers.length;i++){
+      if(user === normalizeKorean(answers[i])) return true;
+    }
+    return false;
+  }
+
+  function shuffle(arr){
+    var copy = arr.slice();
+    for(var i = copy.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = copy[i]; copy[i] = copy[j]; copy[j] = t;
+    }
+    return copy;
+  }
+
+  function saveState(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
+    renderHeader();
+  }
+
+  function loadState(){
+    try {
+      var saved = localStorage.getItem(STORAGE_KEY);
+      if(saved) state = JSON.parse(saved);
+    } catch(e){}
+    if(!state || typeof state !== "object") state = {};
+    if(!Array.isArray(state.words)) state.words = [];
+    if(!Array.isArray(state.hardWords)) state.hardWords = [];
+    if(!state.studiedDays) state.studiedDays = {};
+    if(!state.stats) state.stats = { totalQuizCount:0, perfectCount:0, totalCorrect:0, totalQuestions:0 };
+    if(!Array.isArray(state.unlockedRewards)) state.unlockedRewards = [];
+    if(!state.stars) state.stars = 0;
+    unlockRewards(false);
+    renderHeader();
+  }
+
+  function renderHeader(){
+    el("starCount").textContent = state.stars || 0;
+  }
+
+  function showPage(name){
+    var pages = ["pageHome","pageWords","pageStudy","pageQuiz","pageRewards","pageResult"];
+    for(var i=0;i<pages.length;i++) el(pages[i]).classList.add("hidden");
+    el(name).classList.remove("hidden");
+    if(name === "pageHome") renderHome();
+    if(name === "pageWords") renderWordInputs();
+    if(name === "pageRewards") renderRewards();
+    window.scrollTo(0,0);
+  }
+
+  function formatDateKey(date){
+    var y = date.getFullYear();
+    var m = String(date.getMonth() + 1); if(m.length < 2) m = "0" + m;
+    var d = String(date.getDate()); if(d.length < 2) d = "0" + d;
+    return y + "-" + m + "-" + d;
+  }
+
+  function getMonday(date){
+    var d = new Date(date);
+    var day = d.getDay();
+    var diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    d.setDate(diff);
+    d.setHours(0,0,0,0);
+    return d;
+  }
+
+  function getWeekKey(offset){
+    var monday = getMonday(new Date());
+    monday.setDate(monday.getDate() + offset);
+    return formatDateKey(monday);
+  }
+
+  function getCheckedDaysCount(){
+    var count = 0;
+    for(var k in state.studiedDays){
+      if(state.studiedDays[k]) count++;
+    }
+    return count;
+  }
+
+  function renderHome(){
+    var count = state.words.length;
+    var hardCount = state.hardWords.length;
+    var percent = count ? Math.max(0, Math.round(((count - hardCount) / count) * 100)) : 0;
+
+    el("homeProgress").style.width = percent + "%";
+    el("homeSummary").textContent = count === 0
+      ? "아직 등록된 단어가 없어요. 단어 입력부터 시작하세요."
+      : "이번 주 단어 " + count + "개 중 어려운 단어 " + hardCount + "개가 있어요.";
+    el("statWordCount").textContent = count;
+    el("statHardCount").textContent = hardCount;
+    el("statMascot").textContent = getMascot().emoji;
+
+    var starsBox = el("starsBox");
+    starsBox.innerHTML = "";
+    var showStars = Math.max(10, Math.min(40, state.stars || 0));
+    for(var i=0;i<showStars;i++){
+      var span = document.createElement("span");
+      span.className = "star " + (i < (state.stars || 0) ? "on" : "");
+      span.textContent = "⭐";
+      starsBox.appendChild(span);
+    }
+
+    var days = ["월","화","수","목","금","토","일"];
+    var grid = el("dayGrid");
+    grid.innerHTML = "";
+    for(var d=0; d<days.length; d++){
+      var div = document.createElement("div");
+      div.className = "day";
+      var key = getWeekKey(d);
+      if(state.studiedDays[key]) div.classList.add("done");
+      div.innerHTML = "<div>" + days[d] + "</div><div>" + (state.studiedDays[key] ? "✅" : "—") + "</div>";
+      grid.appendChild(div);
+    }
+  }
+
+  function renderWordInputs(){
+    var box = el("wordInputs");
+    box.innerHTML = "";
+    var rows = state.words.length ? state.words.slice() : [];
+    if(!rows.length){
+      for(var r=0;r<15;r++) rows.push({english:"", korean:"", imageUrl:""});
+    }
+    for(var i=0;i<rows.length;i++){
+      var row = document.createElement("div");
+      row.className = "word-row";
+      row.innerHTML =
+        '<input placeholder="' + (i+1) + '. 영어 단어" value="' + escapeHtml(rows[i].english || "") + '" data-type="english" data-index="' + i + '">' +
+        '<input placeholder="뜻" value="' + escapeHtml(rows[i].korean || "") + '" data-type="korean" data-index="' + i + '">' +
+        '<input placeholder="이미지 링크(선택) - https://..." value="' + escapeHtml(rows[i].imageUrl || "") + '" data-type="imageUrl" data-index="' + i + '">' +
+        '<button type="button" class="ghost" data-remove="' + i + '">삭제</button>' +
+        '<div class="row-note">이미지 링크를 비워두면 외우기에서 자동 이미지를 시도합니다.</div>';
+      box.appendChild(row);
+    }
+
+    var removeButtons = qsa("button[data-remove]", box);
+    for(var j=0;j<removeButtons.length;j++){
+      removeButtons[j].addEventListener("click", function(){
+        removeWordRow(Number(this.getAttribute("data-remove")));
+      }, false);
+    }
+  }
+
+  function collectWordsFromInputs(){
+    var inputs = qsa("#wordInputs input");
+    var temp = [];
+    for(var i=0;i<inputs.length;i++){
+      var idx = Number(inputs[i].getAttribute("data-index"));
+      var type = inputs[i].getAttribute("data-type");
+      if(!temp[idx]) temp[idx] = {english:"", korean:"", imageUrl:""};
+      temp[idx][type] = inputs[i].value.trim();
+    }
+    state.words = temp;
+  }
+
+  function addWordRow(){
+    collectWordsFromInputs();
+    state.words.push({english:"", korean:"", imageUrl:""});
+    renderWordInputs();
+  }
+
+  function removeWordRow(index){
+    collectWordsFromInputs();
+    state.words.splice(index,1);
+    renderWordInputs();
+  }
+
+  function sameWord(a,b){
+    return a && b && a.english === b.english && a.korean === b.korean;
+  }
+
+  function wordExists(word, list){
+    for(var i=0;i<list.length;i++){
+      if(sameWord(word, list[i])) return true;
+    }
+    return false;
+  }
+
+  function saveWords(){
+    collectWordsFromInputs();
+    var filtered = [];
+    for(var i=0;i<state.words.length;i++){
+      if(state.words[i].english && state.words[i].korean) filtered.push(state.words[i]);
+    }
+    state.words = filtered;
+
+    var newHard = [];
+    for(var h=0; h<state.hardWords.length; h++){
+      if(wordExists(state.hardWords[h], state.words)) newHard.push(state.hardWords[h]);
+    }
+    state.hardWords = newHard;
+    saveState();
+    alert("단어 " + state.words.length + "개를 저장했어요.");
+    renderWordInputs();
+  }
+
+  function loadSampleWords(){
+    collectWordsFromInputs();
+
+    var existing = [];
+    for(var i=0;i<state.words.length;i++){
+      if(state.words[i].english && state.words[i].korean) existing.push(state.words[i]);
+    }
+
+    var samples = [
+      {english:"apple", korean:"사과", imageUrl:""},
+      {english:"school", korean:"학교", imageUrl:""},
+      {english:"family", korean:"가족", imageUrl:""},
+      {english:"friend", korean:"친구", imageUrl:""},
+      {english:"library", korean:"도서관", imageUrl:""},
+      {english:"teacher", korean:"선생님", imageUrl:""},
+      {english:"student", korean:"학생", imageUrl:""},
+      {english:"morning", korean:"아침", imageUrl:""},
+      {english:"evening", korean:"저녁", imageUrl:""},
+      {english:"homework", korean:"숙제", imageUrl:""},
+      {english:"question", korean:"질문", imageUrl:""},
+      {english:"answer", korean:"대답", imageUrl:""},
+      {english:"remember", korean:"기억하다", imageUrl:""},
+      {english:"beautiful", korean:"아름다운", imageUrl:""},
+      {english:"practice", korean:"연습하다", imageUrl:""}
+    ];
+
+    var added = 0;
+    for(var s=0;s<samples.length;s++){
+      var duplicate = false;
+      for(var e=0;e<existing.length;e++){
+        if(normalizeEnglish(existing[e].english) === normalizeEnglish(samples[s].english)){
+          duplicate = true;
+          break;
+        }
+      }
+      if(!duplicate){
+        existing.push(samples[s]);
+        added++;
+      }
+    }
+
+    state.words = existing;
+    saveState();
+    renderWordInputs();
+    alert("예시 단어 " + added + "개를 기존 단어 뒤에 추가했어요.");
+  }
+
+  function clearWords(){
+    if(!confirm("이번 주 단어와 어려운 단어 표시를 삭제할까요? 별과 보상은 유지됩니다.")) return;
+    state.words = [];
+    state.hardWords = [];
+    state.lastResult = null;
+    saveState();
+    renderWordInputs();
+  }
+
+  function markTodayDone(){
+    var key = formatDateKey(new Date());
+    var already = state.studiedDays[key];
+    state.studiedDays[key] = true;
+    if(!already){
+      state.stars = (state.stars || 0) + 1;
+      var newUnlocked = unlockRewards(true);
+      saveState();
+      renderHome();
+      alert("오늘 공부 완료! 별 1개를 얻었어요 ⭐" + (newUnlocked.length ? "\n새 스티커: " + newUnlocked.join(", ") : ""));
+    } else {
+      saveState();
+      renderHome();
+      alert("오늘은 이미 공부 완료 체크가 되어 있어요.");
+    }
+  }
+
+  function getEmojiForWord(word){
+    var w = String(word || "").toLowerCase();
+    var map = [
+      {keys:["apple","fruit","banana","orange","grape"], emoji:"🍎"},
+      {keys:["school","class","classroom","teacher","student","homework","lesson"], emoji:"🏫"},
+      {keys:["family","mother","father","sister","brother","parent"], emoji:"👨‍👩‍👧"},
+      {keys:["friend"], emoji:"🧒"},
+      {keys:["library","book","read"], emoji:"📚"},
+      {keys:["dog","cat","animal","bird","fish"], emoji:"🐾"},
+      {keys:["car","bus","train","bike","bicycle"], emoji:"🚗"},
+      {keys:["morning","sun"], emoji:"🌅"},
+      {keys:["night","evening","moon"], emoji:"🌙"},
+      {keys:["question"], emoji:"❓"},
+      {keys:["answer"], emoji:"💬"},
+      {keys:["remember","memory"], emoji:"🧠"},
+      {keys:["practice","exercise"], emoji:"✍️"},
+      {keys:["beautiful"], emoji:"🌸"},
+      {keys:["difficult","hard"], emoji:"🧩"},
+      {keys:["water"], emoji:"💧"},
+      {keys:["house","home"], emoji:"🏠"},
+      {keys:["tree","flower"], emoji:"🌳"}
+    ];
+    for(var i=0;i<map.length;i++){
+      for(var j=0;j<map[i].keys.length;j++){
+        if(w.indexOf(map[i].keys[j]) !== -1) return map[i].emoji;
+      }
+    }
+    return "🖼️";
+  }
+
+  function renderImagePlaceholder(wordObj, subText){
+    el("studyImageBox").innerHTML =
+      '<div class="image-placeholder">' +
+        '<div class="image-emoji">' + getEmojiForWord(wordObj.english) + '</div>' +
+        '<div class="image-label">' + escapeHtml(wordObj.english || "단어") + '</div>' +
+        '<div class="image-sub">' + escapeHtml(subText || "기본 이미지를 보여줘요.") + '</div>' +
+      '</div>';
+  }
+
+  function renderLoadingImage(){
+    el("studyImageBox").innerHTML =
+      '<div class="image-placeholder">' +
+        '<div class="image-emoji">🔎</div>' +
+        '<div class="image-label">이미지 찾는 중...</div>' +
+        '<div class="image-sub">잠시만 기다려 주세요.</div>' +
+      '</div>';
+  }
+
+  function showImage(url, label){
+    el("studyImageBox").innerHTML = '<img src="' + escapeHtml(url) + '" alt="' + escapeHtml(label || "단어 이미지") + '" referrerpolicy="no-referrer">';
+  }
+
+  function fetchWikipediaImage(word){
+    var key = String(word || "").trim().toLowerCase();
+    if(!key) return Promise.resolve(null);
+    if(imageCache[key] !== undefined) return Promise.resolve(imageCache[key]);
+
+    var searchUrl = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + encodeURIComponent(word) + "&limit=1&namespace=0&format=json&origin=*";
+    return fetch(searchUrl)
+      .then(function(res){ return res.json(); })
+      .then(function(data){
+        var titles = data && data[1] ? data[1] : [];
+        if(!titles.length) return null;
+        var title = titles[0];
+        var pageUrl = "https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&pithumbsize=800&titles=" + encodeURIComponent(title) + "&origin=*";
+        return fetch(pageUrl).then(function(res){ return res.json(); });
+      })
+      .then(function(data){
+        if(!data || !data.query || !data.query.pages){
+          imageCache[key] = null;
+          return null;
+        }
+        var pages = data.query.pages;
+        for(var id in pages){
+          if(pages[id] && pages[id].thumbnail && pages[id].thumbnail.source){
+            imageCache[key] = pages[id].thumbnail.source;
+            return pages[id].thumbnail.source;
+          }
+        }
+        imageCache[key] = null;
+        return null;
+      })
+      .catch(function(){
+        imageCache[key] = null;
+        return null;
+      });
+  }
+
+  function updateStudyImage(wordObj){
+    if(!wordObj){
+      renderImagePlaceholder({english:""}, "단어를 선택하면 이미지를 보여줘요.");
+      return;
+    }
+    if(wordObj.imageUrl){
+      showImage(wordObj.imageUrl, wordObj.english);
+      return;
+    }
+    renderLoadingImage();
+    fetchWikipediaImage(wordObj.english).then(function(url){
+      if(studyList[studyIndex] && studyList[studyIndex].english === wordObj.english){
+        if(url) showImage(url, wordObj.english);
+        else renderImagePlaceholder(wordObj, "자동 이미지를 찾지 못했어요.");
+      }
+    });
+  }
+
+  function speakWord(word, slow){
+    if(!word){
+      alert("발음할 단어가 없어요.");
+      return;
+    }
+    if(!("speechSynthesis" in window)){
+      alert("이 브라우저는 발음 기능을 지원하지 않아요.");
+      return;
+    }
+    window.speechSynthesis.cancel();
+    var utter = new SpeechSynthesisUtterance(word);
+    utter.lang = "en-US";
+    utter.rate = slow ? 0.65 : 0.95;
+    utter.pitch = 1;
+    utter.volume = 1;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function startStudy(hardOnly){
+    if(!state.words.length){
+      alert("먼저 단어를 입력하고 저장해 주세요.");
+      showPage("pageWords");
+      return;
+    }
+    studyList = hardOnly ? state.hardWords.slice() : state.words.slice();
+    if(!studyList.length){
+      alert(hardOnly ? "어려운 단어가 아직 없어요. 전체 단어 외우기부터 시작해요." : "외울 단어가 없어요.");
+      studyList = state.words.slice();
+    }
+    studyList = shuffle(studyList);
+    studyIndex = 0;
+    el("studyTitle").textContent = hardOnly ? "어려운 단어 복습" : "단어 외우기";
+    showPage("pageStudy");
+    renderStudy();
+  }
+
+  function renderStudy(){
+    var total = studyList.length;
+    var current = studyList[studyIndex];
+    el("studyCounter").textContent = Math.min(studyIndex + 1, total) + " / " + total;
+    el("studyProgress").style.width = total ? Math.round((studyIndex / total) * 100) + "%" : "0%";
+
+    if(!current){
+      el("studyWord").textContent = "끝!";
+      el("studyMeaning").textContent = "오늘도 잘했어요 🎉";
+      el("studyProgress").style.width = "100%";
+      renderImagePlaceholder({english:"완료"}, "학습이 끝났어요.");
+      markTodayDone();
+      return;
+    }
+
+    el("studyWord").textContent = current.english;
+    el("studyMeaning").textContent = "";
+    updateStudyImage(current);
+  }
+
+  function showMeaning(){
+    var current = studyList[studyIndex];
+    if(current) el("studyMeaning").textContent = current.korean;
+  }
+
+  function addHardWord(word){
+    if(word && !wordExists(word, state.hardWords)) state.hardWords.push(word);
+  }
+
+  function removeHardWord(word){
+    var next = [];
+    for(var i=0;i<state.hardWords.length;i++){
+      if(!sameWord(state.hardWords[i], word)) next.push(state.hardWords[i]);
+    }
+    state.hardWords = next;
+  }
+
+  function markKnown(){
+    var current = studyList[studyIndex];
+    if(!current) return;
+    removeHardWord(current);
+    saveState();
+    studyIndex++;
+    renderStudy();
+  }
+
+  function markHard(){
+    var current = studyList[studyIndex];
+    if(!current) return;
+    addHardWord(current);
+    saveState();
+    studyIndex++;
+    renderStudy();
+  }
+
+  function openQuizPage(){
+    showPage("pageQuiz");
+    el("quizSetup").classList.remove("hidden");
+    el("quizPlay").classList.add("hidden");
+    el("quizFeedback").innerHTML = "";
+  }
+
+  function startQuiz(){
+    if(state.words.length < 1){
+      alert("시험을 보려면 단어가 필요해요.");
+      showPage("pageWords");
+      return;
+    }
+    var countVal = Number(el("quizCount").value);
+    var count = countVal === 999 ? state.words.length : Math.min(countVal, state.words.length);
+    quizDeck = shuffle(state.words.slice()).slice(0, count);
+    quizIndex = 0;
+    quizScore = 0;
+    wrongAnswers = [];
+    el("quizSetup").classList.add("hidden");
+    el("quizPlay").classList.remove("hidden");
+    renderListeningQuestion();
+  }
+
+  function renderListeningQuestion(){
+    if(!quizDeck[quizIndex]){
+      finishQuiz();
+      return;
+    }
+    var total = quizDeck.length;
+    var current = quizDeck[quizIndex];
+    el("quizProgress").style.width = Math.round((quizIndex / total) * 100) + "%";
+    el("quizCounter").textContent = "문제 " + (quizIndex + 1) + " / " + total;
+    el("quizSpelling").value = "";
+    el("quizMeaning").value = "";
+    el("quizSpelling").disabled = false;
+    el("quizMeaning").disabled = false;
+    el("btnSubmitListening").disabled = false;
+    el("quizFeedback").innerHTML = "";
+    setTimeout(function(){
+      if(el("autoSpeak").value === "yes") speakWord(current.english, false);
+    }, 300);
+    setTimeout(function(){ el("quizSpelling").focus(); }, 450);
+  }
+
+  function answerListeningQuiz(){
+    var current = quizDeck[quizIndex];
+    if(!current) return;
+    var spellingInput = el("quizSpelling").value;
+    var meaningInput = el("quizMeaning").value;
+    var spellingCorrect = normalizeEnglish(spellingInput) === normalizeEnglish(current.english);
+    var meaningCorrect = isMeaningCorrect(meaningInput, current.korean);
+    var fullCorrect = spellingCorrect && meaningCorrect;
+
+    if(fullCorrect){
+      quizScore++;
+      removeHardWord(current);
+    } else {
+      addHardWord(current);
+      wrongAnswers.push({word: current, spellingInput: spellingInput, meaningInput: meaningInput, spellingCorrect: spellingCorrect, meaningCorrect: meaningCorrect});
+    }
+    state.stats.totalQuestions += 1;
+    if(fullCorrect) state.stats.totalCorrect += 1;
+
+    el("quizSpelling").disabled = true;
+    el("quizMeaning").disabled = true;
+    el("btnSubmitListening").disabled = true;
+
+    var feedbackClass = fullCorrect ? "good" : ((spellingCorrect || meaningCorrect) ? "partial" : "bad");
+    var feedbackTitle = fullCorrect ? "정답이에요! 🎉" : ((spellingCorrect || meaningCorrect) ? "반은 맞았어요. 조금만 더!" : "아쉬워요. 다시 복습해봐요.");
+    el("quizFeedback").innerHTML =
+      '<div class="feedback ' + feedbackClass + '">' +
+        '<div>' + feedbackTitle + '</div>' +
+        '<div class="check-line"><span>스펠링</span><strong>' + (spellingCorrect ? "✅ 맞음" : "❌ 틀림") + '</strong></div>' +
+        '<div class="check-line"><span>뜻</span><strong>' + (meaningCorrect ? "✅ 맞음" : "❌ 틀림") + '</strong></div>' +
+        '<div style="margin-top:10px;">정답: <strong>' + escapeHtml(current.english) + '</strong> = <strong>' + escapeHtml(current.korean) + '</strong></div>' +
+      '</div>' +
+      '<div class="actions">' +
+        '<button type="button" id="btnNextQuestion">' + (quizIndex + 1 >= quizDeck.length ? "결과 보기" : "다음 문제") + '</button>' +
+        '<button type="button" class="secondary" id="btnHearAnswer">정답 발음 다시 듣기</button>' +
+      '</div>';
+    on("btnNextQuestion", "click", function(){ quizIndex++; renderListeningQuestion(); });
+    on("btnHearAnswer", "click", function(){ speakWord(current.english, false); });
+    saveState();
+  }
+
+  function finishQuiz(){
+    el("quizProgress").style.width = "100%";
+    var total = quizDeck.length;
+    var percent = total ? Math.round((quizScore / total) * 100) : 0;
+    var bonus = 0;
+    if(percent === 100) bonus = 4;
+    else if(percent >= 80) bonus = 3;
+    else if(percent >= 60) bonus = 2;
+    else if(percent >= 40) bonus = 1;
+    state.stars += bonus;
+    state.stats.totalQuizCount += 1;
+    if(percent === 100) state.stats.perfectCount += 1;
+    state.lastResult = {date: new Date().toISOString(), score: quizScore, total: total, wrongAnswers: wrongAnswers, mode: "listening-spelling-meaning"};
+    var newUnlocked = unlockRewards(true);
+    saveState();
+
+    var wrongHtml = "";
+    if(wrongAnswers.length){
+      wrongHtml = "<h3>틀린 단어 / 부분 정답</h3><div class='list'>";
+      for(var i=0;i<wrongAnswers.length;i++){
+        var item = wrongAnswers[i];
+        wrongHtml += "<div class='list-item'><div><strong>" + escapeHtml(item.word.english) + "</strong><div class='small'>" + escapeHtml(item.word.korean) + "</div><div class='small'>스펠링: " + (item.spellingCorrect ? "맞음" : "틀림") + " · 뜻: " + (item.meaningCorrect ? "맞음" : "틀림") + "</div></div><span class='result-bad'>복습 필요</span></div>";
+      }
+      wrongHtml += "</div>";
+    } else {
+      wrongHtml = "<p class='result-good'>전부 맞았어요! 듣고 쓰기 완벽해요 👑</p>";
+    }
+    el("resultBox").innerHTML =
+      "<p style='font-size:24px;font-weight:900;margin:0 0 10px;'>점수: " + quizScore + " / " + total + "</p>" +
+      "<p>정답률: <strong>" + percent + "%</strong></p>" +
+      "<p>이번 시험 보상: ⭐ " + bonus + "개</p>" +
+      "<p class='small'>점수는 스펠링과 뜻을 모두 맞힌 문제만 정답으로 계산했어요.</p>" +
+      (newUnlocked.length ? "<p>새로 열린 스티커: <strong>" + escapeHtml(newUnlocked.join(", ")) + "</strong></p>" : "") + wrongHtml;
+    showPage("pageResult");
+  }
+
+  function getMascot(){
+    var stars = state.stars || 0;
+    if(stars >= 50) return {emoji:"🐉", name:"드래곤 박사", desc:"정말 대단해요! 영어 단어 마스터예요."};
+    if(stars >= 30) return {emoji:"🦄", name:"무지개 유니", desc:"엄청난 실력! 단어 공부의 달인이 되었어요."};
+    if(stars >= 20) return {emoji:"🐻", name:"똑똑 곰이", desc:"꾸준히 공부해서 실력이 많이 늘었어요."};
+    if(stars >= 10) return {emoji:"🐰", name:"말랑 토끼", desc:"열심히 공부하는 귀여운 단어 친구예요."};
+    if(stars >= 5) return {emoji:"🐣", name:"병아리 콩이", desc:"조금씩 성장하고 있어요. 아주 잘하고 있어요!"};
+    return {emoji:"🥚", name:"알콩이", desc:"영어 여행을 시작했어요. 별을 모아 캐릭터를 성장시켜요."};
+  }
+
+  function isRewardUnlocked(reward){
+    var stats = state.stats || { totalQuizCount:0, perfectCount:0 };
+    if(reward.type === "always") return true;
+    if(reward.type === "stars") return (state.stars || 0) >= reward.value;
+    if(reward.type === "quiz") return (stats.totalQuizCount || 0) >= reward.value;
+    if(reward.type === "perfect") return (stats.perfectCount || 0) >= reward.value;
+    if(reward.type === "days") return getCheckedDaysCount() >= reward.value;
+    return false;
+  }
+
+  function unlockRewards(showNewAlert){
+    var newUnlocked = [];
+    for(var i=0;i<REWARDS.length;i++){
+      var reward = REWARDS[i];
+      if(isRewardUnlocked(reward) && state.unlockedRewards.indexOf(reward.id) === -1){
+        state.unlockedRewards.push(reward.id);
+        newUnlocked.push(reward.name);
+      }
+    }
+    if(showNewAlert && newUnlocked.length){
+      // alert is triggered by caller for better wording
+    }
+    return newUnlocked;
+  }
+
+  function renderRewards(){
+    var mascot = getMascot();
+    el("mascotFace").textContent = mascot.emoji;
+    el("mascotName").textContent = mascot.name;
+    el("mascotDesc").textContent = mascot.desc;
+
+    el("rewardQuizCount").textContent = state.stats.totalQuizCount || 0;
+    el("rewardPerfectCount").textContent = state.stats.perfectCount || 0;
+    el("rewardUnlockedCount").textContent = state.unlockedRewards.length || 0;
+
+    var grid = el("rewardGrid");
+    grid.innerHTML = "";
+    for(var i=0;i<REWARDS.length;i++){
+      var reward = REWARDS[i];
+      var unlocked = state.unlockedRewards.indexOf(reward.id) !== -1;
+      var item = document.createElement("div");
+      item.className = "reward-item" + (unlocked ? "" : " locked");
+      item.innerHTML =
+        '<div class="reward-emoji">' + reward.emoji + '</div>' +
+        '<div class="reward-name">' + escapeHtml(reward.name) + '</div>' +
+        '<div class="reward-rule">' + escapeHtml(reward.rule) + '</div>' +
+        '<div class="small" style="margin-top:8px;font-weight:800;color:' + (unlocked ? '#166534' : '#6b7280') + ';">' + (unlocked ? "획득 완료" : "잠금") + '</div>';
+      grid.appendChild(item);
+    }
+  }
+
+  function bindEvents(){
+    on("btnHome","click",function(){ showPage("pageHome"); });
+    on("btnWords","click",function(){ showPage("pageWords"); });
+    on("btnStudy","click",function(){ startStudy(false); });
+    on("btnQuiz","click",function(){ openQuizPage(); });
+    on("btnRewards","click",function(){ showPage("pageRewards"); });
+
+    on("btnSpeakTest","click",function(){
+      speakWord("remember", false);
+    });
+
+    on("btnMarkToday","click",markTodayDone);
+    on("btnStartStudyQuick","click",function(){ startStudy(false); });
+    on("btnStartQuizQuick","click",function(){ openQuizPage(); });
+
+    on("btnAddWord","click",addWordRow);
+    on("btnSaveWords","click",saveWords);
+    on("btnSampleWords","click",loadSampleWords);
+    on("btnClearWords","click",clearWords);
+
+    on("btnPronounce","click",function(){
+      if(studyList[studyIndex]) speakWord(studyList[studyIndex].english, false);
+    });
+    on("btnPronounceSlow","click",function(){
+      if(studyList[studyIndex]) speakWord(studyList[studyIndex].english, true);
+    });
+    on("btnShowMeaning","click",showMeaning);
+    on("btnKnown","click",markKnown);
+    on("btnHard","click",markHard);
+    on("btnStudyHardOnly","click",function(){ startStudy(true); });
+
+    on("btnStartQuiz","click",startQuiz);
+    on("btnListenQuestion","click",function(){ if(quizDeck[quizIndex]) speakWord(quizDeck[quizIndex].english, false); });
+    on("btnListenQuestionSlow","click",function(){ if(quizDeck[quizIndex]) speakWord(quizDeck[quizIndex].english, true); });
+    on("btnSubmitListening","click",answerListeningQuiz);
+    on("btnQuizAgain","click",function(){ openQuizPage(); });
+    on("btnReviewWrong","click",function(){ startStudy(true); });
+    on("btnGoRewards","click",function(){ showPage("pageRewards"); });
+  }
+
+  loadState();
+  bindEvents();
+  showPage("pageHome");
+})();
+</script>
+</body>
+</html>

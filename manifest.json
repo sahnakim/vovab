@@ -1,0 +1,10 @@
+{
+  "name": "주간 영어단어장",
+  "short_name": "영어단어장",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#eef2ff",
+  "theme_color": "#6366f1",
+  "description": "발음을 듣고 스펠링과 뜻을 쓰는 영어 단어 암기 앱",
+  "lang": "ko"
+}
