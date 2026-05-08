@@ -168,6 +168,10 @@
     .archive-word{font-weight:900;font-size:16px}
     .archive-meaning{font-size:13px;color:var(--muted);margin-top:3px}
     .archive-meta{font-size:11px;color:var(--muted);margin-top:5px}
+
+    .archive-item .actions{justify-content:flex-end}
+    .archive-item .actions button{padding:10px 12px;font-size:13px}
+
     .mascot-collection{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
     .mascot-item{background:#fff;border:1px solid var(--border);border-radius:18px;padding:14px;text-align:center}
     .mascot-item.locked{opacity:.42;filter:grayscale(1)}
@@ -502,7 +506,7 @@
         </div>
       </div>
       <div class="notice" style="margin-bottom:0;">
-        뜻 채점은 띄어쓰기와 일부 문장부호를 무시해요. 뜻이 여러 개면 “빠른/신속한”, “빠른, 신속한”, “빠른 또는 신속한”처럼 입력하면 둘 중 하나만 맞아도 정답입니다.
+        뜻 채점은 띄어쓰기와 일부 문장부호를 무시해요. 뜻이 여러 개면 “빠른/신속한”, “빠른, 신속한”, “빠른 또는 신속한”처럼 입력하면 둘 중 하나만 맞아도 정답입니다.<br>성장 수정은 천천히 모이도록 <strong>시험 정답률 80% 이상일 때마다 1개</strong> 지급됩니다. 캐릭터 성장은 매월 자동 초기화돼요.
       </div>
     </div>
 
@@ -531,7 +535,7 @@
 
   <section id="pageArchive" class="page hidden">
     <h2 class="section-title">단어 보관함</h2>
-    <p class="hint">직접 입력하고 저장한 단어만 이곳에 누적 보관돼요. 예시 단어는 보관하지 않습니다.</p>
+    <p class="hint">직접 입력하고 저장한 단어만 이곳에 누적 보관돼요. 예시 단어는 보관하지 않습니다. 보관된 단어는 개별 삭제도 가능해요.</p>
 
     <div class="stats-grid">
       <div class="mini-card">
@@ -568,6 +572,7 @@
       <div class="dragon-chip" id="currentCharacterChip">성장 수정 0개</div>
       <div class="xp-bar"><div id="currentCharacterXpBar"></div></div>
       <div class="small" id="currentCharacterNext" style="margin-top:8px;"></div>
+      <div class="small" id="monthlyGrowthNotice" style="margin-top:6px;">캐릭터 성장은 매월 1일 자동 초기화돼요.</div>
     </div>
 
     <div class="mini-card" style="margin-top:14px;">
@@ -635,7 +640,9 @@
     wordArchive: [],
     activeCharacterId: "dragon",
     characterProgress: {},
-    soundEnabled: true
+    soundEnabled: true,
+    quizGrowthDate: "",
+    characterGrowthMonth: ""
   };
 
   var studyList = [];
@@ -753,6 +760,8 @@
     if(!state.activeCharacterId) state.activeCharacterId = "dragon";
     if(!state.characterProgress) state.characterProgress = {};
     if(typeof state.soundEnabled !== "boolean") state.soundEnabled = true;
+    if(typeof state.quizGrowthDate !== "string") state.quizGrowthDate = "";
+    if(typeof state.characterGrowthMonth !== "string") state.characterGrowthMonth = "";
     initializeCharacterProgress();
     if(!state.stars) state.stars = 0;
     unlockRewards(false);
@@ -779,6 +788,33 @@
     var m = String(date.getMonth() + 1); if(m.length < 2) m = "0" + m;
     var d = String(date.getDate()); if(d.length < 2) d = "0" + d;
     return y + "-" + m + "-" + d;
+  }
+
+
+  function formatMonthKey(date){
+    var y = date.getFullYear();
+    var m = String(date.getMonth() + 1);
+    if(m.length < 2) m = "0" + m;
+    return y + "-" + m;
+  }
+
+  function resetCharacterGrowthForNewMonth(){
+    if(!state.characterProgress) state.characterProgress = {};
+    var currentMonth = formatMonthKey(new Date());
+
+    if(!state.characterGrowthMonth){
+      state.characterGrowthMonth = currentMonth;
+      return false;
+    }
+
+    if(state.characterGrowthMonth !== currentMonth){
+      state.characterProgress = {};
+      state.characterGrowthMonth = currentMonth;
+      initializeCharacterProgress();
+      return true;
+    }
+
+    return false;
   }
 
   function getMonday(date){
@@ -990,17 +1026,42 @@
             '<div class="archive-meaning">' + escapeHtml(word.korean) + '</div>' +
             '<div class="archive-meta">마지막 저장: ' + escapeHtml(dateText) + '</div>' +
           '</div>' +
-          '<button type="button" class="secondary">이번 주에 추가</button>';
-        item.querySelector("button").addEventListener("click", function(){
+          '<div class="actions" style="margin-top:0;">' +
+            '<button type="button" class="secondary" data-action="add">이번 주에 추가</button>' +
+            '<button type="button" class="danger" data-action="delete">삭제</button>' +
+          '</div>';
+
+        item.querySelector('[data-action="add"]').addEventListener("click", function(){
           var added = addWordToCurrentList(word);
           saveState();
           if(added) alert("이번 주 단어에 추가했어요.");
           else alert("이미 이번 주 단어에 있어요.");
           renderArchive();
         }, false);
+
+        item.querySelector('[data-action="delete"]').addEventListener("click", function(){
+          deleteArchiveWord(word);
+        }, false);
+
         list.appendChild(item);
       })(sorted[i]);
     }
+  }
+
+
+  function deleteArchiveWord(word){
+    if(!word) return;
+    if(!confirm('보관함에서 "' + word.english + '" 단어를 삭제할까요?\\n이번 주 단어장에 이미 들어간 단어는 유지됩니다.')) return;
+
+    var next = [];
+    for(var i=0;i<state.wordArchive.length;i++){
+      if(normalizeEnglish(state.wordArchive[i].english) !== normalizeEnglish(word.english)){
+        next.push(state.wordArchive[i]);
+      }
+    }
+    state.wordArchive = next;
+    saveState();
+    renderArchive();
   }
 
   function loadAllArchiveToCurrent(){
@@ -1468,8 +1529,13 @@
     else if(percent >= 60) bonus = 2;
     else if(percent >= 40) bonus = 1;
     state.stars += bonus;
-    var growthBonus = Math.max(1, Math.ceil(percent / 25));
-    addCharacterXp(growthBonus);
+
+    var growthBonus = 0;
+    if(percent >= 80){
+      growthBonus = 1;
+      addCharacterXp(growthBonus);
+    }
+
     state.stats.totalQuizCount += 1;
     if(percent === 100) state.stats.perfectCount += 1;
     state.lastResult = {date: new Date().toISOString(), score: quizScore, total: total, wrongAnswers: wrongAnswers, mode: "listening-spelling-meaning"};
@@ -1491,6 +1557,7 @@
       "<p style='font-size:24px;font-weight:900;margin:0 0 10px;'>점수: " + quizScore + " / " + total + "</p>" +
       "<p>정답률: <strong>" + percent + "%</strong></p>" +
       "<p>이번 시험 보상: ⭐ " + bonus + "개 · 성장 수정 💎 " + growthBonus + "개</p>" +
+      "<p class='small'>성장 수정은 시험 정답률 80% 이상일 때마다 1개 지급돼요.</p>" +
       "<p class='small'>점수는 스펠링과 뜻을 모두 맞힌 문제만 정답으로 계산했어요.</p>" +
       (newUnlocked.length ? "<p>새로 열린 스티커: <strong>" + escapeHtml(newUnlocked.join(", ")) + "</strong></p>" : "") + wrongHtml;
     showPage("pageResult");
@@ -1688,6 +1755,8 @@
     el("currentCharacterChip").textContent = "성장 수정 " + xp + "개";
     el("currentCharacterXpBar").style.width = getStageProgressPercent(character) + "%";
     el("currentCharacterNext").textContent = next ? ("다음 단계까지 성장 수정 " + (next.xp - xp) + "개") : "최종 성장 완료! 다른 캐릭터도 키워보세요.";
+    var monthlyNotice = el("monthlyGrowthNotice");
+    if(monthlyNotice) monthlyNotice.textContent = "이번 달 성장 기록: " + (state.characterGrowthMonth || formatMonthKey(new Date())) + " · 매월 1일 자동 초기화";
 
     renderCharacterSelector();
     renderMascotCollection();
