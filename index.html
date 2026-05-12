@@ -336,6 +336,32 @@
     }
     .sound-toggle-label{font-weight:900}
     .sound-toggle-desc{font-size:12px;color:var(--muted);margin-top:3px}
+
+    .study-write-box{
+      max-width:560px;
+      margin:14px auto 0;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+      text-align:left;
+    }
+    .study-write-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+    .study-check-result{
+      margin-top:10px;
+      border-radius:14px;
+      padding:12px;
+      font-weight:800;
+      line-height:1.5;
+    }
+    .study-check-result.good{background:#dcfce7;color:#166534;border:1px solid #86efac}
+    .study-check-result.partial{background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
+    .study-check-result.bad{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
     .result-good{color:#166534;font-weight:900}
     .result-bad{color:#991b1b;font-weight:900}
     .list{display:grid;gap:8px}
@@ -344,6 +370,7 @@
     }
     footer{text-align:center;font-size:12px;color:var(--muted);padding:10px 0 24px;line-height:1.5}
     @media (min-width: 760px){
+      .study-write-grid{grid-template-columns:1fr 1fr}
       .character-select-grid{grid-template-columns:repeat(2,1fr)}
       .stage-collection{grid-template-columns:repeat(3,1fr)}
       .mascot-collection{grid-template-columns:repeat(3,1fr)}
@@ -463,6 +490,27 @@
         <button type="button" class="secondary" id="btnPronounceSlow">🐢 천천히 듣기</button>
       </div>
       <div class="big-meaning" id="studyMeaning"></div>
+
+      <div class="study-write-box">
+        <div class="answer-label">직접 써보기</div>
+        <div class="small">스펠링과 뜻을 입력하고 확인해보세요. 뜻이 여러 개면 입력된 뜻 중 하나만 맞아도 정답이에요.</div>
+        <div class="study-write-grid">
+          <div>
+            <div class="answer-label">영어 스펠링</div>
+            <input id="studySpellingInput" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="예: remember">
+          </div>
+          <div>
+            <div class="answer-label">한글 뜻</div>
+            <input id="studyMeaningInput" autocomplete="off" placeholder="예: 기억하다">
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="secondary" id="btnCheckStudyWrite">입력 확인</button>
+          <button type="button" class="ghost" id="btnClearStudyWrite">입력 지우기</button>
+        </div>
+        <div id="studyWriteResult"></div>
+      </div>
+
       <div class="actions">
         <button type="button" class="secondary" id="btnShowMeaning">뜻 보기</button>
         <button type="button" class="success" id="btnKnown">외웠어요</button>
@@ -1321,7 +1369,7 @@
       osc.frequency.setValueAtTime(frequency, ctx.currentTime + delay);
 
       gain.gain.setValueAtTime(0.0001, ctx.currentTime + delay);
-      gain.gain.exponentialRampToValueAtTime(volume || 0.12, ctx.currentTime + delay + 0.015);
+      gain.gain.exponentialRampToValueAtTime(volume || 0.24, ctx.currentTime + delay + 0.015);
       gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + delay + duration);
 
       osc.connect(gain);
@@ -1333,15 +1381,15 @@
 
   function playCorrectSound(){
     if(!state.soundEnabled) return;
-    playTone(660, 0.12, 0, 0.11);
-    playTone(880, 0.16, 0.12, 0.11);
-    playTone(1175, 0.18, 0.26, 0.10);
+    playTone(660, 0.12, 0, 0.22);
+    playTone(880, 0.16, 0.12, 0.22);
+    playTone(1175, 0.18, 0.26, 0.20);
   }
 
   function playWrongSound(){
     if(!state.soundEnabled) return;
-    playTone(220, 0.18, 0, 0.11);
-    playTone(165, 0.22, 0.16, 0.10);
+    playTone(220, 0.18, 0, 0.22);
+    playTone(165, 0.22, 0.16, 0.20);
   }
 
   function updateSoundButton(){
@@ -1392,7 +1440,48 @@
 
     el("studyWord").textContent = current.english;
     el("studyMeaning").textContent = "";
+    clearStudyWrite(false);
     updateStudyImage(current);
+  }
+
+
+  function clearStudyWrite(showAlert){
+    var spelling = el("studySpellingInput");
+    var meaning = el("studyMeaningInput");
+    var result = el("studyWriteResult");
+    if(spelling) spelling.value = "";
+    if(meaning) meaning.value = "";
+    if(result) result.innerHTML = "";
+  }
+
+  function checkStudyWrite(){
+    var current = studyList[studyIndex];
+    if(!current) return;
+
+    var spellingInput = el("studySpellingInput") ? el("studySpellingInput").value : "";
+    var meaningInput = el("studyMeaningInput") ? el("studyMeaningInput").value : "";
+    var spellingCorrect = normalizeEnglish(spellingInput) === normalizeEnglish(current.english);
+    var meaningCorrect = isMeaningCorrect(meaningInput, current.korean);
+    var fullCorrect = spellingCorrect && meaningCorrect;
+
+    var result = el("studyWriteResult");
+    if(!result) return;
+
+    var cls = fullCorrect ? "good" : ((spellingCorrect || meaningCorrect) ? "partial" : "bad");
+    var title = fullCorrect ? "잘했어요! 둘 다 맞았어요 🎉" : ((spellingCorrect || meaningCorrect) ? "반은 맞았어요. 조금만 더!" : "아쉬워요. 다시 확인해봐요.");
+    result.innerHTML =
+      '<div class="study-check-result ' + cls + '">' +
+        '<div>' + title + '</div>' +
+        '<div class="check-line"><span>스펠링</span><strong>' + (spellingCorrect ? "✅ 맞음" : "❌ 틀림") + '</strong></div>' +
+        '<div class="check-line"><span>뜻</span><strong>' + (meaningCorrect ? "✅ 맞음" : "❌ 틀림") + '</strong></div>' +
+        '<div style="margin-top:10px;">정답: <strong>' + escapeHtml(current.english) + '</strong> = <strong>' + escapeHtml(current.korean) + '</strong></div>' +
+      '</div>';
+
+    if(fullCorrect){
+      playCorrectSound();
+    } else {
+      playWrongSound();
+    }
   }
 
   function showMeaning(){
@@ -1811,6 +1900,8 @@
       if(studyList[studyIndex]) speakWord(studyList[studyIndex].english, true);
     });
     on("btnShowMeaning","click",showMeaning);
+    on("btnCheckStudyWrite","click",checkStudyWrite);
+    on("btnClearStudyWrite","click",function(){ clearStudyWrite(true); });
     on("btnKnown","click",markKnown);
     on("btnHard","click",markHard);
     on("btnStudyHardOnly","click",function(){ startStudy(true); });
