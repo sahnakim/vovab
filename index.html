@@ -548,8 +548,8 @@
           <div class="mini-title">문제 수</div>
           <select id="quizCount">
             <option value="5">5문제</option>
-            <option value="10" selected>10문제</option>
-            <option value="999">등록된 단어 전체</option>
+            <option value="10">10문제</option>
+            <option value="999" selected>등록된 단어 전체</option>
           </select>
         </div>
         <div class="mini-card">
@@ -1535,8 +1535,28 @@
     showPage("pageQuiz");
     el("quizSetup").classList.remove("hidden");
     el("quizPlay").classList.add("hidden");
+    applyQuizDefaultOptions();
     el("quizFeedback").innerHTML = "";
     updateSoundButton();
+  }
+
+
+  function applyQuizDefaultOptions(){
+    var count = el("quizCount");
+    if(count){
+      count.value = "999";
+      for(var i=0;i<count.options.length;i++){
+        count.options[i].selected = count.options[i].value === "999";
+      }
+    }
+
+    var auto = el("autoSpeak");
+    if(auto){
+      auto.value = "yes";
+      for(var j=0;j<auto.options.length;j++){
+        auto.options[j].selected = auto.options[j].value === "yes";
+      }
+    }
   }
 
   function startQuiz(){
