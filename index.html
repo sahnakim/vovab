@@ -539,7 +539,7 @@
       <div class="sound-toggle">
         <div>
           <div class="sound-toggle-label">정답/오답 알림 소리</div>
-          <div class="sound-toggle-desc">정답이면 맑은 소리, 오답이면 낮은 소리가 나요.</div>
+          <div class="sound-toggle-desc">발음 테스트와 같은 음성 볼륨으로 정답/오답 안내가 나와요.</div>
         </div>
         <button type="button" class="secondary" id="btnToggleSound">소리 켜짐</button>
       </div>
@@ -1390,17 +1390,42 @@
     } catch(e) {}
   }
 
+  function speakFeedback(text, pitch){
+    if(!state.soundEnabled) return;
+    if(!("speechSynthesis" in window)) return;
+
+    try {
+      window.speechSynthesis.cancel();
+      var utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "ko-KR";
+      utterance.rate = 1.08;
+      utterance.pitch = pitch || 1;
+      utterance.volume = 1;
+
+      var voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+      for(var i=0;i<voices.length;i++){
+        if(voices[i].lang && voices[i].lang.toLowerCase().indexOf("ko") === 0){
+          utterance.voice = voices[i];
+          break;
+        }
+      }
+      window.speechSynthesis.speak(utterance);
+    } catch(e) {}
+  }
+
   function playCorrectSound(){
     if(!state.soundEnabled) return;
     playTone(660, 0.12, 0, 0.44);
     playTone(880, 0.16, 0.12, 0.44);
     playTone(1175, 0.18, 0.26, 0.40);
+    setTimeout(function(){ speakFeedback("정답!", 1.18); }, 80);
   }
 
   function playWrongSound(){
     if(!state.soundEnabled) return;
     playTone(220, 0.18, 0, 0.44);
     playTone(165, 0.22, 0.16, 0.40);
+    setTimeout(function(){ speakFeedback("다시 해보자", 0.92); }, 80);
   }
 
   function updateSoundButton(){
