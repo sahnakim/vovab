@@ -362,6 +362,16 @@
     .study-check-result.good{background:#dcfce7;color:#166534;border:1px solid #86efac}
     .study-check-result.partial{background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
     .study-check-result.bad{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+
+    .study-write-box{max-width:720px;margin:14px auto 0;background:#fff;border:1px solid var(--border);border-radius:18px;padding:14px;text-align:left}
+    .pen-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
+    .pen-card{background:#f8fafc;border:1px solid var(--border);border-radius:16px;padding:10px}
+    .pen-canvas{width:100%;height:150px;display:block;background:linear-gradient(#ffffff,#ffffff) padding-box,repeating-linear-gradient(0deg,transparent 0 34px,rgba(99,102,241,.16) 35px 36px);border:1px solid #cbd5e1;border-radius:14px;touch-action:none;cursor:crosshair}
+    .pen-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .pen-tools button{padding:9px 10px;font-size:13px}
+    .pen-answer{display:none;margin-top:10px;border-radius:14px;padding:12px;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;font-weight:900;line-height:1.5}
+    .pen-answer.show{display:block}
+    .pen-self-check{margin-top:10px;border-radius:14px;padding:12px;background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;line-height:1.5;font-size:13px}
     .result-good{color:#166534;font-weight:900}
     .result-bad{color:#991b1b;font-weight:900}
     .list{display:grid;gap:8px}
@@ -370,6 +380,7 @@
     }
     footer{text-align:center;font-size:12px;color:var(--muted);padding:10px 0 24px;line-height:1.5}
     @media (min-width: 760px){
+      .study-write-grid{grid-template-columns:1fr 1fr}
       .study-write-grid{grid-template-columns:1fr 1fr}
       .character-select-grid{grid-template-columns:repeat(2,1fr)}
       .stage-collection{grid-template-columns:repeat(3,1fr)}
@@ -493,7 +504,7 @@
 
       <div class="study-write-box">
         <div class="answer-label">직접 써보기</div>
-        <div class="small">스펠링과 뜻을 입력하고 확인해보세요. 뜻이 여러 개면 입력된 뜻 중 하나만 맞아도 정답이에요.</div>
+        <div class="small">스펠링과 뜻을 키보드로 입력하고 확인해보세요. 뜻이 여러 개면 입력된 뜻 중 하나만 맞아도 정답이에요.</div>
         <div class="study-write-grid">
           <div>
             <div class="answer-label">영어 스펠링</div>
@@ -1369,7 +1380,7 @@
       osc.frequency.setValueAtTime(frequency, ctx.currentTime + delay);
 
       gain.gain.setValueAtTime(0.0001, ctx.currentTime + delay);
-      gain.gain.exponentialRampToValueAtTime(volume || 0.24, ctx.currentTime + delay + 0.015);
+      gain.gain.exponentialRampToValueAtTime(volume || 0.48, ctx.currentTime + delay + 0.015);
       gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + delay + duration);
 
       osc.connect(gain);
@@ -1381,15 +1392,15 @@
 
   function playCorrectSound(){
     if(!state.soundEnabled) return;
-    playTone(660, 0.12, 0, 0.22);
-    playTone(880, 0.16, 0.12, 0.22);
-    playTone(1175, 0.18, 0.26, 0.20);
+    playTone(660, 0.12, 0, 0.44);
+    playTone(880, 0.16, 0.12, 0.44);
+    playTone(1175, 0.18, 0.26, 0.40);
   }
 
   function playWrongSound(){
     if(!state.soundEnabled) return;
-    playTone(220, 0.18, 0, 0.22);
-    playTone(165, 0.22, 0.16, 0.20);
+    playTone(220, 0.18, 0, 0.44);
+    playTone(165, 0.22, 0.16, 0.40);
   }
 
   function updateSoundButton(){
@@ -1443,6 +1454,7 @@
     clearStudyWrite(false);
     updateStudyImage(current);
   }
+
 
 
   function clearStudyWrite(showAlert){
