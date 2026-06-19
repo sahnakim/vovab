@@ -500,7 +500,7 @@
         <button type="button" class="warning" id="btnPronounce">🔊 다시듣기</button>
         <button type="button" class="secondary" id="btnPronounceSlow">🐢 천천히 듣기</button>
       </div>
-      <div class="small">처음 자동 발음과 다시듣기는 느리게, 천천히 듣기는 더 느리게 두 번 재생돼요.</div>
+      <div class="small">처음 자동 발음과 다시듣기는 0.5 속도, 천천히 듣기는 0.2 속도로 두 번 재생돼요.</div>
       <div class="big-meaning" id="studyMeaning"></div>
 
       <div class="study-write-box">
@@ -1363,15 +1363,15 @@
     // slow: 천천히 듣기
     // quiz: 시험 문제 발음
     if(mode === "slow" || mode === true){
-      utter.rate = 0.30;
+      utter.rate = 0.20;
     } else if(mode === "studyAuto"){
-      utter.rate = 0.55;
+      utter.rate = 0.50;
     } else if(mode === "repeat"){
-      utter.rate = 0.55;
+      utter.rate = 0.50;
     } else if(mode === "quiz"){
-      utter.rate = 0.82;
+      utter.rate = 0.50;
     } else {
-      utter.rate = 0.55;
+      utter.rate = 0.50;
     }
 
     utter.pitch = 1;
@@ -1383,7 +1383,7 @@
     if(mode === "slow" || mode === true){
       var utterAgain = new SpeechSynthesisUtterance(word);
       utterAgain.lang = "en-US";
-      utterAgain.rate = 0.30;
+      utterAgain.rate = 0.20;
       utterAgain.pitch = 1;
       utterAgain.volume = 1;
       setTimeout(function(){
