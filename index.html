@@ -500,7 +500,7 @@
         <button type="button" class="warning" id="btnPronounce">🔊 다시듣기</button>
         <button type="button" class="secondary" id="btnPronounceSlow">🐢 천천히 듣기</button>
       </div>
-      <div class="small">처음 발음과 다시듣기는 조금 느리게, 천천히 듣기는 더 느리게 재생돼요.</div>
+      <div class="small">처음 자동 발음과 다시듣기는 느리게, 천천히 듣기는 더 느리게 두 번 재생돼요.</div>
       <div class="big-meaning" id="studyMeaning"></div>
 
       <div class="study-write-box">
@@ -1363,20 +1363,33 @@
     // slow: 천천히 듣기
     // quiz: 시험 문제 발음
     if(mode === "slow" || mode === true){
-      utter.rate = 0.45;
+      utter.rate = 0.30;
     } else if(mode === "studyAuto"){
-      utter.rate = 0.70;
+      utter.rate = 0.55;
     } else if(mode === "repeat"){
-      utter.rate = 0.70;
+      utter.rate = 0.55;
     } else if(mode === "quiz"){
       utter.rate = 0.82;
     } else {
-      utter.rate = 0.70;
+      utter.rate = 0.55;
     }
 
     utter.pitch = 1;
     utter.volume = 1;
     window.speechSynthesis.speak(utter);
+
+    // iPhone/iPad에서는 아주 낮은 rate 차이가 작게 느껴질 수 있어,
+    // 천천히 듣기에서는 짧은 간격 뒤 한 번 더 들려줘 차이가 확실히 나게 합니다.
+    if(mode === "slow" || mode === true){
+      var utterAgain = new SpeechSynthesisUtterance(word);
+      utterAgain.lang = "en-US";
+      utterAgain.rate = 0.30;
+      utterAgain.pitch = 1;
+      utterAgain.volume = 1;
+      setTimeout(function(){
+        window.speechSynthesis.speak(utterAgain);
+      }, 850);
+    }
   }
 
 
