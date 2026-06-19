@@ -497,9 +497,10 @@
       <div class="image-box" id="studyImageBox"></div>
       <div class="big-word" id="studyWord">단어 없음</div>
       <div class="speak-row">
-        <button type="button" class="warning" id="btnPronounce">🔊 발음 듣기</button>
+        <button type="button" class="warning" id="btnPronounce">🔊 다시듣기</button>
         <button type="button" class="secondary" id="btnPronounceSlow">🐢 천천히 듣기</button>
       </div>
+      <div class="small">처음 발음과 다시듣기는 조금 느리게, 천천히 듣기는 더 느리게 재생돼요.</div>
       <div class="big-meaning" id="studyMeaning"></div>
 
       <div class="study-write-box">
@@ -1343,7 +1344,7 @@
     });
   }
 
-  function speakWord(word, slow){
+  function speakWord(word, mode){
     if(!word){
       alert("발음할 단어가 없어요.");
       return;
@@ -1355,7 +1356,24 @@
     window.speechSynthesis.cancel();
     var utter = new SpeechSynthesisUtterance(word);
     utter.lang = "en-US";
-    utter.rate = slow ? 0.65 : 0.95;
+
+    // 발음 속도 구분
+    // studyAuto: 외우기에서 처음 자동 발음
+    // repeat: 다시듣기/발음 듣기
+    // slow: 천천히 듣기
+    // quiz: 시험 문제 발음
+    if(mode === "slow" || mode === true){
+      utter.rate = 0.45;
+    } else if(mode === "studyAuto"){
+      utter.rate = 0.70;
+    } else if(mode === "repeat"){
+      utter.rate = 0.70;
+    } else if(mode === "quiz"){
+      utter.rate = 0.82;
+    } else {
+      utter.rate = 0.70;
+    }
+
     utter.pitch = 1;
     utter.volume = 1;
     window.speechSynthesis.speak(utter);
@@ -1478,6 +1496,13 @@
     el("studyMeaning").textContent = "";
     clearStudyWrite(false);
     updateStudyImage(current);
+
+    // 외우기에서는 새 단어가 나오면 처음 발음을 조금 느리게 자동 재생합니다.
+    setTimeout(function(){
+      if(studyList[studyIndex] && studyList[studyIndex].english === current.english){
+        speakWord(current.english, "studyAuto");
+      }
+    }, 250);
   }
 
 
@@ -1951,10 +1976,10 @@
     on("btnClearArchive","click",clearArchive);
 
     on("btnPronounce","click",function(){
-      if(studyList[studyIndex]) speakWord(studyList[studyIndex].english, false);
+      if(studyList[studyIndex]) speakWord(studyList[studyIndex].english, "repeat");
     });
     on("btnPronounceSlow","click",function(){
-      if(studyList[studyIndex]) speakWord(studyList[studyIndex].english, true);
+      if(studyList[studyIndex]) speakWord(studyList[studyIndex].english, "slow");
     });
     on("btnShowMeaning","click",showMeaning);
     on("btnCheckStudyWrite","click",checkStudyWrite);
@@ -1965,7 +1990,7 @@
 
     on("btnStartQuiz","click",startQuiz);
     on("btnToggleSound","click",toggleSound);
-    on("btnListenQuestion","click",function(){ if(quizDeck[quizIndex]) speakWord(quizDeck[quizIndex].english, false); });
+    on("btnListenQuestion","click",function(){ if(quizDeck[quizIndex]) speakWord(quizDeck[quizIndex].english, "quiz"); });
     on("btnListenQuestionSlow","click",function(){ if(quizDeck[quizIndex]) speakWord(quizDeck[quizIndex].english, true); });
     on("btnSubmitListening","click",answerListeningQuiz);
     on("btnQuizAgain","click",function(){ openQuizPage(); });
